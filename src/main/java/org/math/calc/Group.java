@@ -6,14 +6,13 @@ import java.util.regex.Pattern;
 public class Group {
     public static Pattern pGroup = Pattern.compile("(\\((\\d+\\s?)+\\))+");
     private String[] groups;
-    private String result;
+    private Integer[][] result;
 
     public Group(String[] groups) {
         this.groups = groups;
-        equalityOfSets();
     }
 
-    private void equalityOfSets() {
+    public void start() {
         List<Integer[][]> symGroupsMult = new ArrayList<>();
         for (String group : groups) {
             String[] groupOne = group
@@ -23,7 +22,9 @@ public class Group {
                     .split("\\*");
             symGroupsMult.add(buildTable(groupOne));
         }
-        System.out.println(toCycleNote(multiplication(symGroupsMult.get(0), symGroupsMult.get(1))));
+        result = symGroupsMult.get(0);
+        for (int i = 1; i < symGroupsMult.size(); i++)
+            result = multiplication(result, symGroupsMult.get(i));
     }
 
     private Integer[][] buildTable(String[] cycleNoteGroup) {
@@ -73,7 +74,7 @@ public class Group {
     private String toCycleNote(Integer[][] symGroupTable) {
         StringBuilder cycleNote = new StringBuilder();
         Set<Integer> tracking = new HashSet<>();
-        for (int i = 0; i < symGroupTable.length; i++) {
+        for (int i = 0; i < symGroupTable[0].length; i++) {
             int first = symGroupTable[0][i];
             if (tracking.contains(first))
                 continue;
@@ -90,5 +91,23 @@ public class Group {
             cycleNote.append(listToString(queue)).append(')');
         }
         return cycleNote.toString();
+    }
+
+    private String toTableNote(Integer[][] symGroupTable) {
+        StringBuilder note = new StringBuilder();
+        for (Integer[] integers : symGroupTable) {
+            for (Integer integer : integers)
+                note.append(integer).append(' ');
+            note.deleteCharAt(note.length() - 1).append("\n");
+        }
+        return note.toString();
+    }
+
+    public String getCycleNoteResult() {
+        return toCycleNote(result);
+    }
+
+    public String getTableNoteResult() {
+        return toTableNote(result);
     }
 }

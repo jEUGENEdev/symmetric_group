@@ -1,7 +1,7 @@
 package org.math;
 
-import org.math.exc.ArgsFailException;
 import org.math.calc.Group;
+import org.math.exc.ArgsFailException;
 
 import java.util.Scanner;
 
@@ -10,9 +10,18 @@ public class Application {
         try(Scanner scanner = new Scanner(System.in)) {
             String expr = scanner.nextLine();
             G g = checkIsGroups(expr);
-            if(!g.is())
+            if (!g.is())
                 throw new ArgsFailException();
             Group group = new Group(g.groups());
+            group.start();
+            System.out.printf("""
+                    Result in cycle note:
+                                
+                    %s
+                                
+                    Result in table note
+                                
+                    %s""", group.getCycleNoteResult(), group.getTableNoteResult());
         }
     }
 
