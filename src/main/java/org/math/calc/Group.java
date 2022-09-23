@@ -1,8 +1,6 @@
 package org.math.calc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Group {
@@ -25,7 +23,7 @@ public class Group {
                     .split("\\*");
             symGroupsMult.add(buildTable(groupOne));
         }
-        multiplication(symGroupsMult.get(0), symGroupsMult.get(1));
+        System.out.println(toCycleNote(multiplication(symGroupsMult.get(0), symGroupsMult.get(1))));
     }
 
     private Integer[][] buildTable(String[] cycleNoteGroup) {
@@ -57,6 +55,40 @@ public class Group {
         return multi;
     }
 
-//    private String toCycleNote() {
-//    }
+    private String listToString(List<Integer> listInteger) {
+        StringBuilder sb = new StringBuilder();
+        for (int i : listInteger)
+            sb.append(i).append(' ');
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    private int searchDisplayFromA(int a, Integer[][] symGroupTable) {
+        for (int i = 0; i < symGroupTable[0].length; i++)
+            if (i + 1 == a)
+                return symGroupTable[1][i];
+        return -1;
+    }
+
+    private String toCycleNote(Integer[][] symGroupTable) {
+        StringBuilder cycleNote = new StringBuilder();
+        Set<Integer> tracking = new HashSet<>();
+        for (int i = 0; i < symGroupTable.length; i++) {
+            int first = symGroupTable[0][i];
+            if (tracking.contains(first))
+                continue;
+            tracking.add(first);
+            cycleNote.append('(');
+            int cur = first;
+            List<Integer> queue = new ArrayList<>();
+            do {
+                if (!queue.contains(cur))
+                    queue.add(cur);
+                tracking.add(cur);
+                cur = searchDisplayFromA(cur, symGroupTable);
+            } while (cur != first);
+            cycleNote.append(listToString(queue)).append(')');
+        }
+        return cycleNote.toString();
+    }
 }
