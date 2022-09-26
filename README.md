@@ -6,6 +6,7 @@
   <li>And finally, download the entire project from this repository</li>
   <li>Assemble the project using <code>mvn clean package</code></li>
   <li>Run the assembled project <code>*.jar</code> from the <code>target/</code> folder using <code>java -jar *.jar</code></li>
+  <ul><li>Instead of the <code>*</code> character, use the full name of the file</li></ul>
 </ol>
 
 <br>
